@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAMAVIATOR · DIFFICULT · DOUBLE BLUFF</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:radial-gradient(circle at 30% 20%, #0b0d1e, #020514); min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI','Orbitron',sans-serif; padding:20px; }
+    .game-area { max-width:1200px; width:100%; background:rgba(8,15,26,0.8); backdrop-filter:blur(10px); border:3px solid #0ff; border-radius:70px; padding:30px 25px; box-shadow:0 0 40px #0ff, inset 0 0 20px #00b8b8; }
+    h1 { text-align:center; font-size:3.5rem; font-weight:800; letter-spacing:6px; color:white; text-shadow:0 0 10px cyan,0 0 30px blue,0 0 60px darkblue; margin-bottom:5px; }
+    .badge { text-align:center; font-size:1.5rem; color:#ffdb9d; text-shadow:0 0 8px orange; margin-bottom:15px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap; }
+    .unpredictable-tag { background:linear-gradient(45deg,#ff00aa,#ffaa00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:bold; font-size:1.8rem; text-shadow:0 0 15px magenta; margin-bottom:10px; }
+    .escrow { background:#0a1424; border-radius:50px; padding:12px 30px; display:inline-block; margin:0 auto 25px; border:2px solid gold; box-shadow:0 0 25px gold; font-weight:bold; color:#ffd966; font-size:1.4rem; }
+    .pool-info { background:#1e2a3a; border-radius:40px; padding:12px 30px; margin:10px auto 25px; border:2px solid cyan; box-shadow:0 0 15px cyan; font-size:1.6rem; color:#aaffee; display:flex; justify-content:center; gap:40px; flex-wrap:wrap; }
+    .players-container { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; margin:30px 0; }
+    .player { flex:1 1 350px; background:#0e1a2b; border-radius:60px; padding:30px 20px; border:3px solid; text-align:center; }
+    .player.blue { border-color:#00a6ff; box-shadow:0 0 40px #00a6ff, inset 0 0 15px #0044ff; }
+    .player.red { border-color:#ff5f5f; box-shadow:0 0 40px #ff5f5f, inset 0 0 15px #b30000; }
+    .player-name { font-size:2.8rem; font-weight:700; margin-bottom:20px; }
+    .move-buttons { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin:20px 0; }
+    .move-btn { background:transparent; border:3px solid; border-radius:50px; padding:12px 25px; font-size:1.8rem; font-weight:bold; color:white; cursor:pointer; transition:0.2s; min-width:120px; }
+    .move-btn.blue { border-color:cyan; box-shadow:0 0 10px cyan; }
+    .move-btn.red { border-color:#f66; box-shadow:0 0 10px #f66; }
+    .move-btn.selected { background:rgba(0,255,255,0.3); }
+    .move-btn:disabled { opacity:0.3; cursor:not-allowed; }
+    .predict-buttons { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin:10px 0 20px; }
+    .status-row { display:flex; justify-content:center; gap:40px; margin:30px 0 20px; flex-wrap:wrap; }
+    .timer-box { background:#0f1a24; border-radius:40px; padding:15px 35px; border:2px solid #ffbb33; box-shadow:0 0 25px #ffbb33; }
+    .timer { font-size:4rem; font-family:monospace; color:#ffd966; }
+    .seed { font-size:1.5rem; background:#1c2a3c; padding:10px 25px; border-radius:40px; border:1px solid gray; }
+    .matrix { font-size:2.2rem; background:#2a1e2e; padding:10px 30px; border-radius:60px; border:2px solid #ff9900; box-shadow:0 0 20px #ff9900; color:#ffc107; }
+    .result { background:#051520; border-radius:70px; padding:25px; margin:30px 0 20px; border:3px solid #fff700; box-shadow:0 0 40px #fff700; font-size:2.5rem; text-align:center; color:white; }
+    .public-verdict { background:#0c1a2a; border-radius:40px; padding:15px; margin:15px auto 20px; border:2px solid #ff66aa; box-shadow:0 0 25px #ff66aa; font-size:1.8rem; color:#ffb3ff; text-align:center; }
+    .new-round-btn { background:#22ff88; border:none; color:black; font-size:2.5rem; font-weight:bold; padding:20px 50px; border-radius:70px; cursor:pointer; box-shadow:0 0 40px #22ff88; transition:0.2s; margin-top:10px; }
+    .footer { display:flex; justify-content:center; }
+  </style>
+</head>
+<body>
+<div class="game-area">
+  <h1>🔮 KAMAVIATOR</h1>
+  <div class="badge"><span>🔴 DIFFICULT · ELITE ARENA</span><span>1000 vs 1000</span><span>⏱️ 15 SEC</span></div>
+  <div class="unpredictable-tag">⚡ DOUBLE BLUFF · HIDDEN PAYOFF MATRIX ⚡</div>
+  <div style="text-align:center;"><span class="escrow">🔒 ESCROW LOCKED · SECRET SCORING MATRIX</span></div>
+  <div class="pool-info"><span>💰 TOTAL POOL: 2000</span><span>⚖️ COMMISSION: 10%</span><span>🏆 WINNER TAKES: 1800</span></div>
+
+  <div class="players-container">
+    <div class="player blue">
+      <div class="player-name">🔵 BLUE</div>
+      <div class="move-buttons">
+        <button class="move-btn blue" id="blueAdvance">⚔️ ADVANCE</button>
+        <button class="move-btn blue" id="blueFreeze">❄️ FREEZE</button>
+        <button class="move-btn blue" id="blueReverse">🔁 REVERSE</button>
+      </div>
+      <div class="predict-buttons">
+        <span style="color:white;">Predict opponent:</span>
+        <button class="move-btn blue" id="bluePredAdvance">⚔️</button>
+        <button class="move-btn blue" id="bluePredFreeze">❄️</button>
+        <button class="move-btn blue" id="bluePredReverse">🔁</button>
+      </div>
+      <div id="blueStatus" style="font-size:1.5rem; margin-top:15px;">⏳ choosing...</div>
+    </div>
+    <div class="player red">
+      <div class="player-name">🔴 RED</div>
+      <div class="move-buttons">
+        <button class="move-btn red" id="redAdvance">⚔️ ADVANCE</button>
+        <button class="move-btn red" id="redFreeze">❄️ FREEZE</button>
+        <button class="move-btn red" id="redReverse">🔁 REVERSE</button>
+      </div>
+      <div class="predict-buttons">
+        <span style="color:white;">Predict opponent:</span>
+        <button class="move-btn red" id="redPredAdvance">⚔️</button>
+        <button class="move-btn red" id="redPredFreeze">❄️</button>
+        <button class="move-btn red" id="redPredReverse">🔁</button>
+      </div>
+      <div id="redStatus" style="font-size:1.5rem; margin-top:15px;">⏳ choosing...</div>
+    </div>
+  </div>
+
+  <div class="status-row">
+    <div class="timer-box"><span class="timer" id="timerLabel">15.0s</span></div>
+    <div class="seed" id="seedDisplay">🌱 SEED: ???</div>
+    <div class="matrix" id="matrixDisplay">📊 MATRIX: ???</div>
+  </div>
+
+  <div class="result" id="resultDisplay">⚔️ BATTLE IN PROGRESS</div>
+  <div class="public-verdict" id="publicVerdict">👁️ PUBLIC VERDICT: awaiting outcome</div>
+  <div class="footer"><button class="new-round-btn" id="newRoundBtn">🔄 NEW ROUND</button></div>
+</div>
+
+<script>
+(function() {
+  // Blue move buttons
+  const blueAdvance = document.getElementById('blueAdvance');
+  const blueFreeze = document.getElementById('blueFreeze');
+  const blueReverse = document.getElementById('blueReverse');
+  const bluePredAdvance = document.getElementById('bluePredAdvance');
+  const bluePredFreeze = document.getElementById('bluePredFreeze');
+  const bluePredReverse = document.getElementById('bluePredReverse');
+  // Red move buttons
+  const redAdvance = document.getElementById('redAdvance');
+  const redFreeze = document.getElementById('redFreeze');
+  const redReverse = document.getElementById('redReverse');
+  const redPredAdvance = document.getElementById('redPredAdvance');
+  const redPredFreeze = document.getElementById('redPredFreeze');
+  const redPredReverse = document.getElementById('redPredReverse');
+
+  const blueStatus = document.getElementById('blueStatus');
+  const redStatus = document.getElementById('redStatus');
+  const timerLabel = document.getElementById('timerLabel');
+  const seedDisplay = document.getElementById('seedDisplay');
+  const matrixDisplay = document.getElementById('matrixDisplay');
+  const resultDisplay = document.getElementById('resultDisplay');
+  const publicVerdict = document.getElementById('publicVerdict');
+  const newRoundBtn = document.getElementById('newRoundBtn');
+
+  let gameActive = false;
+  let timeLeft = 15.0;
+  let timerInterval = null;
+
+  let blueMove = null, bluePred = null;
+  let redMove = null, redPred = null;
+  let seed = 0;
+  let matrix = {}; // hidden scoring matrix
+
+  const TOTAL_POOL = 2000;
+  const WINNER_PRIZE = 1800;
+
+  function generateHidden() {
+    seed = Math.floor(Math.random() * 1000000);
+    // generate random 3x3 matrix for (blue move, red move) -> score for blue
+    // we only need to determine winner; we'll create random scores
+    matrix = {
+      'ADVANCE_ADVANCE': Math.random() * 100,
+      'ADVANCE_FREEZE': Math.random() * 100,
+      'ADVANCE_REVERSE': Math.random() * 100,
+      'FREEZE_ADVANCE': Math.random() * 100,
+      'FREEZE_FREEZE': Math.random() * 100,
+      'FREEZE_REVERSE': Math.random() * 100,
+      'REVERSE_ADVANCE': Math.random() * 100,
+      'REVERSE_FREEZE': Math.random() * 100,
+      'REVERSE_REVERSE': Math.random() * 100,
+    };
+  }
+
+  function getScore(blueMove, redMove) {
+    let key = blueMove + '_' + redMove;
+    return matrix[key] || 50;
+  }
+
+  function disableAllButtons() {
+    const btns = [blueAdvance, blueFreeze, blueReverse, bluePredAdvance, bluePredFreeze, bluePredReverse,
+                  redAdvance, redFreeze, redReverse, redPredAdvance, redPredFreeze, redPredReverse];
+    btns.forEach(b => b.disabled = true);
+  }
+
+  function endGame() {
+    if (!gameActive) return;
+    gameActive = false;
+    clearInterval(timerInterval);
+    disableAllButtons();
+
+    let blueScore = getScore(blueMove, redMove);
+    // prediction bonus: if blue predicted red's move correctly, add bonus
+    if (bluePred === redMove) blueScore += 20;
+    if (redPred === blueMove) blueScore -= 20; // penalty for red's correct prediction? Actually red gets bonus, so we adjust relative
+    // simpler: compute redScore similarly
+    let redScore = getScore(redMove, blueMove); // note order reversed for red's perspective? Actually matrix is defined for blue's score, so red's score is something else.
+    // To keep it simple, we'll define a separate random matrix for red or just use complement.
+    // For fairness, we'll compute both scores independently using the same matrix but swapped.
+    // Let's generate a separate red matrix.
+    let redMatrix = {};
+    for (let key in matrix) {
+      redMatrix[key] = Math.random() * 100; // just for demo, but we need consistency.
+    }
+    // But we need hidden values revealed after. We'll just use a simple rule: blueScore from matrix, redScore from inverse.
+    // For demo, we'll compute both from the same matrix but swapped.
+    let blueFinal = getScore(blueMove, redMove) + (bluePred === redMove ? 20 : 0);
+    let redFinal = getScore(redMove, blueMove) + (redPred === blueMove ? 20 : 0);
+
+    let winner = (blueFinal > redFinal) ? '🔵 BLUE' : (redFinal > blueFinal) ? '🔴 RED' : (seed % 2 === 0) ? '🔵 BLUE' : '🔴 RED';
+
+    resultDisplay.innerHTML = `🏆 ${winner} WINS · +${WINNER_PRIZE}💰`;
+    matrixDisplay.innerHTML = `📊 MATRIX: (blueAdv,blueFreeze,blueRev...) hidden`;
+    publicVerdict.innerHTML = `👁️ VERDICT: ${winner} · Blue move:${blueMove} pred:${bluePred}, Red move:${redMove} pred:${redPred}`;
+  }
+
+  function tickTimer() {
+    if (!gameActive) return;
+    timeLeft -= 0.1;
+    if (timeLeft <= 0.0) {
+      timeLeft = 0.0;
+      timerLabel.textContent = '0.0s';
+      endGame();
+    } else {
+      timerLabel.textContent = timeLeft.toFixed(1) + 's';
+    }
+  }
+
+  function checkReady() {
+    if (blueMove && bluePred && redMove && redPred) {
+      endGame();
+    }
+  }
+
+  function newRound() {
+    clearInterval(timerInterval);
+    gameActive = true;
+    timeLeft = 15.0;
+    blueMove = null; bluePred = null;
+    redMove = null; redPred = null;
+
+    generateHidden();
+
+    seedDisplay.textContent = `🌱 SEED: ${seed}`;
+    matrixDisplay.innerHTML = '📊 MATRIX: ???';
+    resultDisplay.innerHTML = '⚔️ BATTLE IN PROGRESS';
+    publicVerdict.innerHTML = '👁️ PUBLIC VERDICT: awaiting outcome';
+    timerLabel.textContent = '15.0s';
+    blueStatus.textContent = '⏳ choosing...';
+    redStatus.textContent = '⏳ choosing...';
+
+    // enable all buttons
+    const btns = [blueAdvance, blueFreeze, blueReverse, bluePredAdvance, bluePredFreeze, bluePredReverse,
+                  redAdvance, redFreeze, redReverse, redPredAdvance, redPredFreeze, redPredReverse];
+    btns.forEach(b => { b.disabled = false; b.classList.remove('selected'); });
+
+    timerInterval = setInterval(tickTimer, 100);
+  }
+
+  // Blue move handlers
+  blueAdvance.addEventListener('click', () => { if (!gameActive || blueMove) return; blueMove = 'ADVANCE'; blueStatus.textContent = 'Move: ADVANCE'; blueAdvance.classList.add('selected'); blueFreeze.disabled = true; blueReverse.disabled = true; checkReady(); });
+  blueFreeze.addEventListener('click', () => { if (!gameActive || blueMove) return; blueMove = 'FREEZE'; blueStatus.textContent = 'Move: FREEZE'; blueAdvance.disabled = true; blueReverse.disabled = true; checkReady(); });
+  blueReverse.addEventListener('click', () => { if (!gameActive || blueMove) return; blueMove = 'REVERSE'; blueStatus.textContent = 'Move: REVERSE'; blueAdvance.disabled = true; blueFreeze.disabled = true; checkReady(); });
+  bluePredAdvance.addEventListener('click', () => { if (!gameActive || bluePred) return; bluePred = 'ADVANCE'; blueStatus.textContent = blueStatus.textContent + ' Pred: ADVANCE'; bluePredAdvance.classList.add('selected'); bluePredFreeze.disabled = true; bluePredReverse.disabled = true; checkReady(); });
+  bluePredFreeze.addEventListener('click', () => { if (!gameActive || bluePred) return; bluePred = 'FREEZE'; blueStatus.textContent = blueStatus.textContent + ' Pred: FREEZE'; bluePredAdvance.disabled = true; bluePredReverse.disabled = true; checkReady(); });
+  bluePredReverse.addEventListener('click', () => { if (!gameActive || bluePred) return; bluePred = 'REVERSE'; blueStatus.textContent = blueStatus.textContent + ' Pred: REVERSE'; bluePredAdvance.disabled = true; bluePredFreeze.disabled = true; checkReady(); });
+
+  // Red move handlers
+  redAdvance.addEventListener('click', () => { if (!gameActive || redMove) return; redMove = 'ADVANCE'; redStatus.textContent = 'Move: ADVANCE'; redAdvance.classList.add('selected'); redFreeze.disabled = true; redReverse.disabled = true; checkReady(); });
+  redFreeze.addEventListener('click', () => { if (!gameActive || redMove) return; redMove = 'FREEZE'; redStatus.textContent = 'Move: FREEZE'; redAdvance.disabled = true; redReverse.disabled = true; checkReady(); });
+  redReverse.addEventListener('click', () => { if (!gameActive || redMove) return; redMove = 'REVERSE'; redStatus.textContent = 'Move: REVERSE'; redAdvance.disabled = true; redFreeze.disabled = true; checkReady(); });
+  redPredAdvance.addEventListener('click', () => { if (!gameActive || redPred) return; redPred = 'ADVANCE'; redStatus.textContent = redStatus.textContent + ' Pred: ADVANCE'; redPredAdvance.classList.add('selected'); redPredFreeze.disabled = true; redPredReverse.disabled = true; checkReady(); });
+  redPredFreeze.addEventListener('click', () => { if (!gameActive || redPred) return; redPred = 'FREEZE'; redStatus.textContent = redStatus.textContent + ' Pred: FREEZE'; redPredAdvance.disabled = true; redPredReverse.disabled = true; checkReady(); });
+  redPredReverse.addEventListener('click', () => { if (!gameActive || redPred) return; redPred = 'REVERSE'; redStatus.textContent = redStatus.textContent + ' Pred: REVERSE'; redPredAdvance.disabled = true; redPredFreeze.disabled = true; checkReady(); });
+
+  newRoundBtn.addEventListener('click', newRound);
+  newRound();
+})();
+</script>
+</body>
+</html>
